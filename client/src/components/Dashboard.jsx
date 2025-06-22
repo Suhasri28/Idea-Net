@@ -12,8 +12,7 @@ const Dashboard = () => {
   const [file, setFile] = useState(null);
 
   const location = useLocation();
-  const navigate = useNavigate(); // ✅ Now placed correctly inside component
-
+  const navigate = useNavigate();
   const user = new URLSearchParams(location.search).get("name");
 
   const fetchIdeas = async () => {
@@ -70,7 +69,7 @@ const Dashboard = () => {
 
       <h3>All Pitches</h3>
       {ideas.map((idea, idx) => (
-        <IdeaCard idea={idea} key={idx} />
+        <IdeaCard idea={idea} key={idx} currentUser={user} />
       ))}
     </div>
   );
