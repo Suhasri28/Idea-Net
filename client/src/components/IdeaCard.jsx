@@ -1,32 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const IdeaCard = ({ idea, currentUser }) => {
-  const [showApply, setShowApply] = useState(false);
-  const [name, setName] = useState(currentUser);
-  const [email, setEmail] = useState("");
-  const [github, setGithub] = useState("");
+const IdeaCard = ({ idea, user, refresh }) => {
   const [resume, setResume] = useState(null);
 
+  const hasApplied = idea.applicants?.some((a) => a.name === user);
+  const isOwner = idea.postedBy === user;
+
   const handleApply = async () => {
-    if (!email || !resume) {
-      alert("Please provide email and resume.");
-      return;
-    }
-
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("github", github);
+    formData.append("ideaId", idea._id);
+    formData.append("name", user);
     formData.append("resume", resume);
+    await axios.post("http://localhost:5000/apply", formData);
+    alert("Applied successfully");
+    refresh();
+  };
 
-    try {
-      const res = await axios.post(`http://localhost:5000/apply/${idea._id}`, formData);
-      alert(res.data.message);
-      setShowApply(false);
-    } catch (err) {
-      alert("Something went wrong!");
-    }
+  const handleStatusChange = async (applicantName, status) => {
+    await axios.post("http://localhost:5000/update-status", {
+      ideaId: idea._id,
+      applicantName,
+      status,
+    });
+    refresh();
   };
 
   return (
@@ -39,19 +36,32 @@ const IdeaCard = ({ idea, currentUser }) => {
         <a href={`http://localhost:5000${idea.fileUrl}`} target="_blank" rel="noopener noreferrer">Download File</a>
       )}
 
-      {idea.postedBy !== currentUser && (
+      {!isOwner && !hasApplied && (
         <>
-          {!showApply ? (
-            <button onClick={() => setShowApply(true)} style={{ marginTop: "10px" }}>Apply</button>
-          ) : (
-            <div style={{ marginTop: "10px" }}>
-              <input placeholder="Your Email" type="email" onChange={(e) => setEmail(e.target.value)} />
-              <input placeholder="GitHub Link (optional)" onChange={(e) => setGithub(e.target.value)} />
-              <input type="file" accept=".pdf" onChange={(e) => setResume(e.target.files[0])} />
-              <button onClick={handleApply}>Submit Application</button>
-              <button onClick={() => setShowApply(false)}>Cancel</button>
+          <input type="file" onChange={(e) => setResume(e.target.files[0])} />
+          <button onClick={handleApply}>Apply</button>
+        </>
+      )}
+
+      {isOwner && idea.applicants?.length > 0 && (
+        <>
+          <h5>Applicants:</h5>
+          {idea.applicants.map((a, idx) => (
+            <div key={idx}>
+              <p><strong>{a.name}</strong> - <em>{a.status}</em></p>
+              {a.resumeUrl && (
+                <a href={`http://localhost:5000${a.resumeUrl}`} target="_blank" rel="noopener noreferrer">
+                  View Resume
+                </a>
+              )}
+              {a.status === "Pending" && (
+                <>
+                  <button onClick={() => handleStatusChange(a.name, "Accepted")}>Accept</button>
+                  <button onClick={() => handleStatusChange(a.name, "Rejected")}>Reject</button>
+                </>
+              )}
             </div>
-          )}
+          ))}
         </>
       )}
     </div>
