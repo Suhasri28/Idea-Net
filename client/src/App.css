@@ -1,0 +1,78 @@
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+.auth-container input {
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+.auth-container button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.auth-container button:hover {
+  background-color: #0056b3;
+}
+.dashboard {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+}
+.pitch-form input,
+.pitch-form textarea {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+}
+.pitch-form button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+.idea-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background: #f4f4f4;
+}
+.search-bar {
+  width: 300px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.logout-button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
